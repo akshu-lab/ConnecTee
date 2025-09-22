@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In - ConnecTee by Teeoff Technologies</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #f0f9ff 0%, #ecfdf5 100%);
+            min-height: 500px;
+            top: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Background Animation */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><defs><radialGradient id="a" cx="50%" cy="50%"><stop offset="0%" stop-color="%2310b981" stop-opacity="0.1"/><stop offset="100%" stop-color="%2310b981" stop-opacity="0"/></radialGradient></defs><circle cx="200" cy="200" r="150" fill="url(%23a)"/><circle cx="800" cy="300" r="200" fill="url(%23a)"/><circle cx="400" cy="700" r="100" fill="url(%23a)"/></svg>');
+            opacity: 0.3;
+            animation: float 20s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(1deg); }
+        }
+
+        /* Floating Elements */
+        .floating-element {
+            position: absolute;
+            opacity: 0.1;
+            animation: drift 15s ease-in-out infinite;
+        }
+
+        .floating-element:nth-child(1) {
+            top: 10%;
+            left: 10%;
+            font-size: 3rem;
+            animation-delay: 0s;
+        }
+
+        .floating-element:nth-child(2) {
+            top: 20%;
+            right: 10%;
+            font-size: 2rem;
+            animation-delay: 5s;
+        }
+
+        .floating-element:nth-child(3) {
+            bottom: 20%;
+            left: 15%;
+            font-size: 2.5rem;
+            animation-delay: 10s;
+        }
+
+        .floating-element:nth-child(4) {
+            bottom: 30%;
+            right: 20%;
+            font-size: 2rem;
+            animation-delay: 3s;
+        }
+
+        @keyframes drift {
+            0%, 100% { transform: translateY(0px) translateX(0px) rotate(0deg); }
+            25% { transform: translateY(-20px) translateX(10px) rotate(5deg); }
+            50% { transform: translateY(-10px) translateX(-10px) rotate(-3deg); }
+            75% { transform: translateY(-15px) translateX(15px) rotate(3deg); }
+        }
+
+        /* Sign In Container */
+        .signin-container {
+            background: white;
+            border-radius: 50px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 80%;
+            max-width: 400px;
+            max-height: 800px;
+            position: relative;
+            z-index: 10;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        /* Logo */
+        .logo {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .logo-text {
+            font-size: 2rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #10b981, #059669);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        /* Form Header */
+        .form-header {
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .form-header h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 0rem;
+        }
+
+        .form-header p {
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+
+        /* Form Styles */
+        .signin-form {
+            display: flex;
+            flex-direction: column;
+            gap: 0.7rem;
+        }
+
+        .form-group {
+            position: relative;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 0.3rem;
+            font-size: 0.95rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 8px 18px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            background: #f9fafb;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #10b981;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .form-input::placeholder {
+            color: #9ca3af;
+        }
+
+        /* Password Input with Toggle */
+        .password-wrapper {
+            position: relative;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #6b7280;
+            font-size: 1.2rem;
+            padding: 0.25rem;
+            border-radius: 4px;
+            transition: color 0.3s ease;
+        }
+
+        .password-toggle:hover {
+            color: #10b981;
+        }
+
+        /* Remember Me & Forgot Password */
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 0.5rem 0;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .remember-me input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #10b981;
+            cursor: pointer;
+        }
+
+        .remember-me label {
+            font-size: 0.9rem;
+            color: #6b7280;
+            cursor: pointer;
+        }
+
+        .forgot-password {
+            color: #10b981;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .forgot-password:hover {
+            color: #059669;
+            text-decoration: underline;
+        }
+
+        /* Sign In Button */
+        .signin-btn {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            border: none;
+            padding: 1.25rem;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .signin-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .signin-btn:hover::before {
+            left: 100%;
+        }
+
+        .signin-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(16, 185, 129, 0.4);
+        }
+
+        .signin-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Divider */
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 1rem 0;
+            color: #9ca3af;
+            font-size: 0.9rem;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #e5e7eb;
+        }
+
+        .divider span {
+            padding: 0 1rem;
+        }
+
+        /* Social Sign In */
+        .social-signin {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .social-btn {
+            flex: 1;
+            padding: 0.875rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-weight: 500;
+            color: #374151;
+        }
+
+        .social-btn:hover {
+            border-color: #10b981;
+            background: #f0fdf4;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(16, 185, 129, 0.1);
+        }
+
+        .social-btn.google:hover {
+            border-color: #10b981;
+            background: #fef2f2;
+            box-shadow: 0 8px 15px rgba(234, 67, 53, 0.1);
+        }
+
+        /* Sign Up Link */
+        .signup-link {
+            text-align: center;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #e5e7eb;
+            color: #6b7280;
+        }
+
+        .signup-link a {
+            color: #10b981;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .signup-link a:hover {
+            color: #059669;
+            text-decoration: underline;
+        }
+
+        /* Loading Animation */
+        .btn-loading {
+            pointer-events: none;
+            opacity: 0.7;
+        }
+
+        .btn-loading::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px;
+            height: 20px;
+            border: 2px solid transparent;
+            border-top: 2px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        /* Error Messages */
+        .error-message {
+            color: #ef4444;
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .form-input.error {
+            border-color: #ef4444;
+            background: #fef2f2;
+        }
+
+        /* Success Message */
+        .success-message {
+            background: #f0fdf4;
+            color: #16a34a;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid #16a34a;
+            display: none;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        /* Back to Home Link */
+        .back-home {
+            position: absolute;
+            top: 0.1rem;
+            left: 2rem;
+            color: #10b981;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            z-index: 20;
+        }
+
+        .back-home:hover {
+            color: #059669;
+            transform: translateX(-5px);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 640px) {
+            .signin-container {
+                margin: 1rem;
+                padding: 2rem;
+                border-radius: 16px;
+            }
+
+            .form-header h1 {
+                font-size: 1.75rem;
+            }
+
+            .social-signin {
+                flex-direction: column;
+            }
+
+            .back-home {
+                top: 1rem;
+                left: 1rem;
+            }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #10b981;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #059669;
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating Elements -->
+    <div class="floating-element">💬</div>
+    <div class="floating-element">📱</div>
+    <div class="floating-element">💾</div>
+    <div class="floating-element">📢</div>
+
+    <!-- Back to Home Link -->
+    <a href="/" class="back-home">
+        ← Back to Home
+    </a>
+
+    <!-- Sign In Container -->
+    <div class="signin-container">
+        <!-- Logo -->
+        <div class="logo">
+            <div class="logo-text">
+                <div class="logo-icon">●</div>
+                ConnecTee
+            </div>
+        </div>
+
+        <!-- Form Header -->
+        <div class="form-header">
+            <h1>Welcome Back</h1>
+            <p>Sign in to your ConnecTee account</p>
+        </div>
+
+        <!-- Success Message -->
+        <div class="success-message" id="successMessage">
+            Welcome back! You have successfully signed in.
+        </div>
+
+        <!-- Sign In Form -->
+        <form class="signin-form" id="signinForm" onsubmit="handleSignIn(event)">
+            <div class="form-group">
+                <label for="email" class="form-label">Email Address</label>
+                <input 
+                    type="email" 
+                    id="email" 
+                    name="email" 
+                    class="form-input" 
+                    placeholder="Enter your email"
+                    required
+                >
+                <div class="error-message" id="emailError">Please enter a valid email address</div>
+            </div>
+
+            <div class="form-group">
+                <label for="password" class="form-label">Password</label>
+                <div class="password-wrapper">
+                    <input 
+                        type="password" 
+                        id="password" 
+                        name="password" 
+                        class="form-input" 
+                        placeholder="Enter your password"
+                        required
+                        minlength="6"
+                    >
+                    <button type="button" class="password-toggle" onclick="togglePassword()">
+                        👁️
+                    </button>
+                </div>
+                <div class="error-message" id="passwordError">Password must be at least 6 characters</div>
+            </div>
+
+            <div class="form-options">
+                <div class="remember-me">
+                    <input type="checkbox" id="remember" name="remember">
+                    <label for="remember">Remember me</label>
+                </div>
+                <a href="#" class="forgot-password">Forgot Password?</a>
+            </div>
+
+            <button type="submit" class="signin-btn" id="signinBtn">
+                Sign In
+            </button>
+        </form>
+
+        <!-- Divider -->
+        <div class="divider">
+            <span>Or continue with</span>
+        </div>
+
+        <!-- Social Sign In -->
+        <div class="social-signin">
+            <button class="social-btn google" onclick="signInWithGoogle()">
+                <span>🔍</span>
+                Google
+            </button>
+            <button class="social-btn" onclick="signInWithMicrosoft()">
+                <span>Ⓜ️</span>
+                Microsoft
+            </button>
+        </div>
+
+        <!-- Sign Up Link -->
+        <div class="signup-link">
+            Don't have an account? <a href="#">Sign up here</a>
+        </div>
+    </div>
+
+    <script>
+        // Password Toggle Functionality
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const toggleBtn = document.querySelector('.password-toggle');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleBtn.innerHTML = '🙈';
+            } else {
+                passwordInput.type = 'password';
+                toggleBtn.innerHTML = '👁️';
+            }
+        }
+
+        // Form Validation
+        function validateEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+
+        function showError(inputId, errorId, message) {
+            const input = document.getElementById(inputId);
+            const error = document.getElementById(errorId);
+            
+            input.classList.add('error');
+            error.textContent = message;
+            error.classList.add('show');
+        }
+
+        function hideError(inputId, errorId) {
+            const input = document.getElementById(inputId);
+            const error = document.getElementById(errorId);
+            
+            input.classList.remove('error');
+            error.classList.remove('show');
+        }
+
+        // Handle Sign In Form Submission
+        function handleSignIn(event) {
+            event.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const signinBtn = document.getElementById('signinBtn');
+            const successMessage = document.getElementById('successMessage');
+            
+            // Reset previous errors
+            hideError('email', 'emailError');
+            hideError('password', 'passwordError');
+            
+            let hasError = false;
+            
+            // Validate email
+            if (!validateEmail(email)) {
+                showError('email', 'emailError', 'Please enter a valid email address');
+                hasError = true;
+            }
+            
+            // Validate password
+            if (password.length < 6) {
+                showError('password', 'passwordError', 'Password must be at least 6 characters');
+                hasError = true;
+            }
+            
+            if (hasError) {
+                return;
+            }
+            
+            // Show loading state
+            signinBtn.classList.add('btn-loading');
+            signinBtn.textContent = '';
+            
+            // Simulate API call
+            setTimeout(() => {
+                // Reset button
+                signinBtn.classList.remove('btn-loading');
+                signinBtn.textContent = 'Sign In';
+                
+                // Show success message
+                successMessage.classList.add('show');
+                
+                // Hide success message after 3 seconds
+                setTimeout(() => {
+                    successMessage.classList.remove('show');
+                }, 3000);
+                
+                // In a real application, you would:
+                // 1. Make an API call to authenticate the user
+                // 2. Handle the response
+                // 3. Redirect to dashboard or show appropriate message
+                console.log('Sign in attempted with:', { email, password });
+            }, 2000);
+        }
+
+        // Social Sign In Functions
+        function signInWithGoogle() {
+            // Implement Google OAuth sign in
+            console.log('Google sign in clicked');
+            alert('Google sign in would be implemented here');
+        }
+
+        function signInWithMicrosoft() {
+            // Implement Microsoft OAuth sign in
+            console.log('Microsoft sign in clicked');
+            alert('Microsoft sign in would be implemented here');
+        }
+
+        // Real-time validation
+        document.getElementById('email').addEventListener('input', function() {
+            if (this.value && validateEmail(this.value)) {
+                hideError('email', 'emailError');
+            }
+        });
+
+        document.getElementById('password').addEventListener('input', function() {
+            if (this.value.length >= 6) {
+                hideError('password', 'passwordError');
+            }
+        });
+
+        // Add animation delay to floating elements
+        document.addEventListener('DOMContentLoaded', function() {
+            const floatingElements = document.querySelectorAll('.floating-element');
+            floatingElements.forEach((el, index) => {
+                el.style.animationDelay = `${index * 2}s`;
+            });
+        });
+
+        // Add ripple effect to buttons
+        document.querySelectorAll('.signin-btn, .social-btn').forEach(button => {
+            button.addEventListener('click', function(e) {
+                const ripple = document.createElement('span');
+                const rect = this.getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height);
+                const x = e.clientX - rect.left - size / 2;
+                const y = e.clientY - rect.top - size / 2;
+                
+                ripple.style.width = ripple.style.height = size + 'px';
+                ripple.style.left = x + 'px';
+                ripple.style.top = y + 'px';
+                ripple.style.position = 'absolute';
+                ripple.style.borderRadius = '50%';
+                ripple.style.backgroundColor = 'rgba(255,255,255,0.5)';
+                ripple.style.pointerEvents = 'none';
+                ripple.style.transform = 'scale(0)';
+                ripple.style.animation = 'ripple 0.6s linear';
+                
+                this.appendChild(ripple);
+                
+                setTimeout(() => {
+                    ripple.remove();
+                }, 600);
+            });
+        });
+
+        // Add CSS animation for ripple effect
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes ripple {
+                to {
+                    transform: scale(4);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
